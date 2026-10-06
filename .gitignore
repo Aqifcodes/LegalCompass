@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+chroma_db/
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.DS_Store
+*.log
+data/legal_corpus/processed/
