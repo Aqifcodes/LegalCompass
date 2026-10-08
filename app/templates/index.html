@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LegalCompass — Know Your Rights</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-icon">🧭</span>
+      <span class="logo-text">LegalCompass</span>
+    </div>
+    <p class="logo-tagline">Understand your rights. Know your next step.</p>
+    <div class="header-badge">Employment &amp; Labour · India · V1</div>
+  </div>
+</header>
+
+<main class="main-layout">
+
+  <aside class="input-panel">
+    <div class="input-panel-inner">
+
+      <div class="input-header">
+        <h2>Describe Your Situation</h2>
+        <p class="input-hint">Write in English, Hindi, Telugu, Tamil, Kannada, or any other Indian language. LegalCompass covers employment and labour matters.</p>
+      </div>
+
+      <div class="language-badge" id="langBadge" style="display:none;">
+        <span class="lang-label">Detected language:</span>
+        <span id="langName"></span>
+      </div>
+
+      <textarea
+        id="userInput"
+        class="user-input"
+        placeholder="Example: My employer has not paid my salary for three months. I am a permanent employee. I have emailed HR multiple times. What can I do?
+
+You may write in your preferred language."
+        rows="8"
+        maxlength="2000"
+      ></textarea>
+
+      <div class="input-meta">
+        <span id="charCount" class="char-count">0 / 2000</span>
+      </div>
+
+      <!-- draft always on — no checkbox -->
+      <input type="hidden" id="draftToggle" value="true" />
+
+      <button class="btn-analyze" id="analyzeBtn" onclick="handleAnalyze()">
+        Analyse My Situation
+      </button>
+
+      <div id="contextBox" class="context-box" style="display:none;">
+        <div class="context-header">
+          <h3>A few questions to give you a better answer</h3>
+        </div>
+        <div id="contextQuestions"></div>
+        <button class="btn-context" onclick="submitContext()">Continue</button>
+      </div>
+
+      <div class="scope-note">
+        <strong>Covers:</strong> Wages · Salary · Termination · PF · Gratuity · Maternity · Workplace issues · Labour disputes · Legal aid
+      </div>
+
+    </div>
+  </aside>
+
+  <section class="results-panel" id="resultsPanel">
+
+    <div class="loading-state" id="loadingState" style="display:none;">
+      <div class="spinner"></div>
+      <p id="loadingText">Analysing your situation…</p>
+    </div>
+
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">⚖</div>
+      <h3>Your legal analysis will appear here</h3>
+      <p>Describe your employment or labour situation on the left and click <strong>Analyse My Situation</strong>.</p>
+      <div class="empty-features">
+        <div class="empty-feature">Grounded in official Indian labour codes</div>
+        <div class="empty-feature">Supports major Indian languages</div>
+        <div class="empty-feature">Identifies the correct authority for your case</div>
+        <div class="empty-feature">Prepares a draft notice or complaint letter</div>
+      </div>
+    </div>
+
+    <div class="error-state" id="errorState" style="display:none;">
+      <div class="error-icon">⚠</div>
+      <h3 id="errorTitle">Something went wrong</h3>
+      <p id="errorMsg"></p>
+    </div>
+
+    <div id="resultsContent" style="display:none;">
+
+      <div class="case-summary-banner" id="caseSummaryBanner">
+        <div class="banner-top">
+          <div class="banner-label">Case Summary</div>
+          <button class="btn-translate" id="translateBtn" style="display:none;" onclick="translateResult()">
+            Translate to <span id="translateLangName"></span>
+          </button>
+        </div>
+        <p id="caseSummaryText"></p>
+        <div class="language-note" id="languageNote" style="display:none;">
+          Showing response in: <span id="responseLang"></span>
+          <button class="btn-translate-back" onclick="showEnglish()">Show English</button>
+        </div>
+      </div>
+
+      <div class="result-card" id="card01">
+        <div class="card-header">
+          <span class="card-num">01</span>
+          <span class="card-title">What the Law Says</span>
+        </div>
+        <div class="card-body">
+          <p class="plain-summary" id="plainSummary"></p>
+          <div id="provisions"></div>
+        </div>
+      </div>
+
+      <div class="result-card" id="card02">
+        <div class="card-header">
+          <span class="card-num">02</span>
+          <span class="card-title">How This Applies to You</span>
+        </div>
+        <div class="card-body">
+          <p id="applicationText"></p>
+          <div id="uncertainties" class="uncertainties-box" style="display:none;"></div>
+        </div>
+      </div>
+
+      <div class="result-card card-actions" id="card03">
+        <div class="card-header">
+          <span class="card-num">03</span>
+          <span class="card-title">What You Can Do</span>
+        </div>
+        <div class="card-body">
+          <ol class="action-list" id="actionList"></ol>
+        </div>
+      </div>
+
+      <div class="result-card card-authority" id="card04">
+        <div class="card-header">
+          <span class="card-num">04</span>
+          <span class="card-title">Relevant Authority</span>
+        </div>
+        <div class="card-body" id="authorityBody"></div>
+      </div>
+
+      <div class="result-card" id="card05" style="display:none;">
+        <div class="card-header">
+          <span class="card-num">05</span>
+          <span class="card-title">Draft Notice</span>
+          <button class="toggle-btn" onclick="toggleDraft()" id="draftToggleBtn">Show</button>
+        </div>
+        <div class="card-body" id="draftBody" style="display:none;">
+          <div class="draft-container">
+            <div class="draft-title" id="draftTitle"></div>
+            <pre class="draft-text" id="draftText"></pre>
+            <div class="draft-disclaimer" id="draftDisclaimer"></div>
+            <button class="btn-copy" onclick="copyDraft()">Copy Notice</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-card" id="card06">
+        <div class="card-header">
+          <span class="card-num">06</span>
+          <span class="card-title">Legal Sources</span>
+          <button class="toggle-btn" onclick="toggleSources()" id="sourcesToggleBtn">Expand</button>
+        </div>
+        <div class="card-body" id="sourcesBody" style="display:none;">
+          <div id="sourcesList"></div>
+        </div>
+      </div>
+
+      <div class="disclaimer-footer" id="disclaimerFooter"></div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>LegalCompass V1 &middot; Employment &amp; Labour &middot; India</p>
+  <p class="footer-note">Retrieval-grounded legal information — not a substitute for a qualified lawyer.</p>
+</footer>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
