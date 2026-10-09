@@ -148,6 +148,7 @@ Most workers do not know which law protects them, what remedy they have, or whic
           │ Documents + Authority│
           │ / DLSA Legal Help    │
           └──────────────────────┘
+```
 
 ---
 
@@ -308,9 +309,9 @@ LegalCompass/
 | Frontend | Vanilla HTML / CSS / JS | No framework overhead |
 | State | Pydantic v2 | Strict type enforcement |
 
----
 
 ```
+---
 
 ## Getting Started
 
@@ -324,7 +325,7 @@ LegalCompass/
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/<your-username>/LegalCompass.git
+git clone https://github.com/<Aqifcodes>/LegalCompass.git
 cd LegalCompass
 
 # 2. Create and activate a virtual environment
