@@ -310,7 +310,6 @@ LegalCompass/
 | State | Pydantic v2 | Strict type enforcement |
 
 
-```
 ---
 
 ## Getting Started
@@ -338,6 +337,7 @@ pip install -r requirements.txt
 
 # 4. Create your .env file (see Configuration below)
 ```
+
 > The legal corpus must be ingested before first use. Run your ingestion script once, then start the app.
 
 ### Run
